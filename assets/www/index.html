@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <!--<meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=3, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">	
+        <link rel="stylesheet"  href="css/micss.css">
+        <link rel="stylesheet"  href="css/jquery.mobile-1.3.1.css">
+        <link rel="stylesheet"  href="css/jquery.mobile.theme-1.3.1.css">
+    </head>
+    <body>
+        <div data-role="page" id="home" >
+            <div data-role="panel" id="settings" data-position-fixed="true" data-display="overlay" data-theme="a">
+                <a href="#miHeader" data-role="button" data-rel="close" data-icon="delete" class="ui-btn-right" data-theme="a" data-mini="true">Cerrar opciones</a>
+            </div>
+            <div data-role="header" id="miHeader">
+                <a href="#settings" data-role="button" data-icon="bars" data-iconpos="notext" data-theme="a" class="ui-btn-left">GPS</a>
+                <h1>Gasolinera</h1>
+                <a href="#gpsmap" data-role="button" data-icon="gear" data-iconpos="notext" data-theme="b" class="ui-btn-right">GPS</a>
+            </div>
+            <div data-role="content" >
+                <div >
+                    <input type="search" name="buscaGas" id="buscaGas"placeholder="Busca Gasolineras..."  data-clear-btn="true">
+                    <ul data-role="listview" data-inset="true" id="nearGasStationsLi">
+                        <li><a href="#detalle">Gas 01<p class="ui-li-aside">150M</p></a></li>
+                        <li><a href="#detalle">Gas 02<p class="ui-li-aside">500M</p></a></li>
+                        <li><a href="#detalle">Gas 03<p class="ui-li-aside">1K</p></a></li>
+                        <li><a href="#detalle">Gas 04<p class="ui-li-aside">2K</p></a></li>
+                    </ul>
+                </div>
+                <div  id="precios" class="ui-li-bootom"><!-- data-position="fixed" -->
+                    <ul data-role="listview" data-theme="f">
+                        <li><img src="img/magna.png" class="ui-li-icon">Magna <b>$10.6</b></li>
+                        <li><img src="img/premium.png" class="ui-li-icon">Premium <strong>$11.5</strong></li>
+                        <li><img src="img/diesel.png" class="ui-li-icon">Diesel <strong>$10.5</strong></li>
+                    </ul>
+                </div>
+            </div>
+            <div data-role="footer"  data-position="fixed" data-theme="b">
+                <div data-role="navbar">
+                    <ul>
+                        <li><a href="#" class="ui-btn-active ui-state-persist">Cercanas</a></li>
+                        <li><a href="#" class="ui-state-persist">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div data-role="page" id="detalle" data-add-back-btn="true">
+            <div data-role="panel" id="settings" data-position-fixed="true" data-display="overlay" data-theme="a">
+                <a href="#miHeader" data-role="button" data-rel="close" data-icon="delete" class="ui-btn-right" data-theme="a" data-mini="true">Cerrar opciones</a>
+            </div>
+            <div data-role="header" id="miHeader">
+                <!--<a href="#settings" data-role="button" data-icon="bars" data-iconpos="notext" data-theme="a" class="ui-btn-left">GPS</a>-->
+                <h1>Gasolinera</h1>
+                <a href="#gpsmap" data-role="button" data-icon="gear" data-iconpos="notext" data-theme="b" class="ui-btn-right">GPS</a>
+            </div>
+            <div data-role="content" >
+                <div da
+            </div>
+        </div>
+        <div data-role="page" id="gpsmap" data-add-back-btn="true">
+            <div data-role="panel" id="settings" data-position-fixed="true" data-display="overlay" data-theme="a">
+                <a href="#miHeader" data-role="button" data-rel="close" data-icon="delete" class="ui-btn-right" data-theme="a" data-mini="true">Cerrar opciones</a>
+            </div>
+            <div data-role="header" id="miHeader">
+                <!--<a href="#settings" data-role="button" data-icon="bars" data-iconpos="notext" data-theme="a" class="ui-btn-left">GPS</a>-->
+                <h1>Gasolinera</h1>
+            </div>
+            <div data-role="content">
+                <div id='contentgps' style='height:450px;'></div>
+            </div>
+        </div>
+    </body>
+    <script src="js/jquery-1.7.2.js"></script>
+	<script src="js/jquery.mobile-1.3.1.js"></script>
+    <script type="text/javascript" src="cordova-2.6.0.js"></script>
+    <script src="js/mustache.js"></script>
+    <script type=text/javascript charset="utf-8">
+        
+                $('#home').on( 'pageshow',function(event, ui){
+                    //alert('showing status page');
+                });
+                $('#home').on( 'pagehide',function(event, ui){
+                    //alert('hiding status page');
+                });
+        
+                $('#gpsmap').live( 'pageshow',function(event, ui){
+					navigator.geolocation.getCurrentPosition(loadMapa, loadMapa2);
+				})
+                
+                /*var URL_GAS_BY_LOCATION='http://192.168.0.79;5656/api/gas/findByLocation';
+                function loadNearGasStation()
+                {
+                    $.getJSON(URL_GAS_BY_LOCATION, function(data) {
+                        var template = 
+                        "<ul>{{#employess}}<li><a href=&quot;#&quot;onclick=&quot;
+                            verDetalle(&quot;{{id}}&quot;)&quot;> {{name}} </a></l1>{{/employess}}</ul>";
+                        var html = Mustache.to_html(template,data);
+                        $('#gasolineras').html(html);
+                });
+                
+                function loadEstados(id)
+                {
+                
+                }*/
+                
+                function loadMapa(position)
+		        {
+                $('#contentgps').gMap({
+                     maptype: 'ROADMAP',
+                     zoom: 15,
+                     controls: {
+                         panControl: true,
+                         zoomControl: false,
+                         mapTypeControl: true,
+                         scaleControl: false,
+                         streetViewControl: false,
+                         overviewMapControl: false
+                     },
+                    markers:[{
+				     latitude: position.coords.latitude,
+                     longitude: position.coords.longitude,
+                     html: "Aqui estas!",
+                        popup: true
+                    }]
+			   }); 
+               }
+        
+                function loadMapa2(error)
+		        {
+                $('#contentgps').gMap({
+	
+				     latitude: 19.425316,
+                     longitude: -99.134102,
+                     maptype: 'TERRAIN',
+                     zoom: 5,
+                     controls: {
+                         panControl: true,
+                         zoomControl: false,
+                         mapTypeControl: true,
+                         scaleControl: false,
+                         streetViewControl: false,
+                         overviewMapControl: false
+                     }
+			   }); 
+               }
+    </script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+	<script type="text/javascript" src="js/jquery.gmap.js"></script>
+</html>
